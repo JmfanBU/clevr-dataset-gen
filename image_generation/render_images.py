@@ -33,7 +33,7 @@ if INSIDE_BLENDER:
     import utils
   except ImportError as e:
     print("\nERROR")
-    print("Running render_images.py from Blender and cannot import utils.py.") 
+    print("Running render_images.py from Blender and cannot import utils.py.")
     print("You may need to add a .pth file to the site-packages of Blender's")
     print("bundled python with a command like this:\n")
     print("echo $PWD >> $BLENDER/$VERSION/python/lib/python3.5/site-packages/clevr.pth")
@@ -47,7 +47,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--base_scene_blendfile', default='data/base_scene.blend',
     help="Base blender file on which all scenes are based; includes " +
           "ground plane, lights, and camera.")
-parser.add_argument('--properties_json', default='data/properties.json',
+parser.add_argument('--properties_json', default='data/synthetic_properties.json',
     help="JSON file defining objects, materials, sizes, and colors. " +
          "The \"colors\" field maps from CLEVR color names to RGB values; " +
          "The \"sizes\" field maps from CLEVR size names to scalars used to " +
@@ -87,7 +87,7 @@ parser.add_argument('--start_idx', default=0, type=int,
     help="The index at which to start for numbering rendered images. Setting " +
          "this to non-zero values allows you to distribute rendering across " +
          "multiple machines and recombine the results later.")
-parser.add_argument('--num_images', default=5, type=int,
+parser.add_argument('--num_images', default=21000, type=int,
     help="The number of images to render")
 parser.add_argument('--filename_prefix', default='CLEVR',
     help="This prefix will be prepended to the rendered images and JSON scenes")
@@ -123,7 +123,7 @@ parser.add_argument('--date', default=dt.today().strftime("%m/%d/%Y"),
          "defaults to today's date")
 
 # Rendering options
-parser.add_argument('--use_gpu', default=0, type=int,
+parser.add_argument('--use_gpu', default=1, type=int,
     help="Setting --use_gpu 1 enables GPU-accelerated rendering using CUDA. " +
          "You must have an NVIDIA GPU with the CUDA toolkit installed for " +
          "to work.")
@@ -168,7 +168,7 @@ def main(args):
     os.makedirs(args.output_scene_dir)
   if args.save_blendfiles == 1 and not os.path.isdir(args.output_blend_dir):
     os.makedirs(args.output_blend_dir)
-  
+
   all_scene_paths = []
   for i in range(args.num_images):
     img_path = img_template % (i + args.start_idx)
@@ -448,7 +448,7 @@ def add_random_objects(scene_struct, num_objects, args, camera):
 def compute_all_relationships(scene_struct, eps=0.2):
   """
   Computes relationships between all pairs of objects in the scene.
-  
+
   Returns a dictionary mapping string relationship names to lists of lists of
   integers, where output[rel][i] gives a list of object indices that have the
   relationship rel with object i. For example if j is in output['left'][i] then
